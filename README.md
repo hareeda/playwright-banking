@@ -27,41 +27,24 @@ Detailed test reports generated after execution
 
 🚀 Installation & Setup
 1️⃣ Clone the Repository
-sh
-Copy
-Edit
-git clone https://github.com/your-repo-name/playwright-banking.git
+git clone https://github.com/hareeda/playwright-banking.git
 cd playwright-banking
 2️⃣ Install Dependencies
-sh
-Copy
-Edit
 npm install
 3️⃣ Run Tests
 Run all tests:
 
-sh
-Copy
-Edit
+
 npx playwright test
 Run tests in a specific order:
 
-sh
-Copy
-Edit
 npx playwright test --workers=1
 Run a single test file:
 
-sh
-Copy
-Edit
 npx playwright test tests/login.test.ts
 4️⃣ View Test Reports
 After execution, Playwright generates a report. Open it using:
 
-sh
-Copy
-Edit
 npx playwright show-report
 📝 Playwright Configuration (playwright.config.ts)
 The Playwright configuration is defined in playwright.config.ts, which includes:
@@ -87,8 +70,6 @@ Each page has a corresponding class in the pages/ directory to encapsulate UI in
 
 Example: LoginPage.ts
 typescript
-Copy
-Edit
 import { Page, expect } from '@playwright/test';
 
 export class LoginPage {
@@ -112,9 +93,6 @@ Prefix test files (1_registration.test.ts, 2_login.test.ts, etc.).
 
 Run Playwright with a single worker:
 
-sh
-Copy
-Edit
 npx playwright test --workers=1
 Use Playwright's projects feature in playwright.config.ts for custom execution order.
 
@@ -125,7 +103,7 @@ Use Playwright's projects feature in playwright.config.ts for custom execution o
 ✅ Add API testing using Playwright’s built-in API capabilities
 
 📧 Support & Contact
-For issues, please open a GitHub issue or reach out at your-email@example.com.
+For issues, please open a GitHub issue or reach out at hareeda33@gmail.com.
 
 Happy Testing! 🚀🎭
 
