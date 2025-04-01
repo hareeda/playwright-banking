@@ -1,0 +1,48 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: User Registration
+- Location: H:\projects\playwright-banking\tests\registartion.test.ts:4:5
+
+# Error details
+
+```
+Error: page.click: Target page, context or browser has been closed
+Call log:
+  - waiting for locator('a[href="/parabank/register.htm"]')
+
+    at RegistrationPage.register (H:\projects\playwright-banking\pages\RegistrationPage.ts:11:21)
+    at H:\projects\playwright-banking\tests\registartion.test.ts:7:26
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class RegistrationPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async register(userData: { firstName: string; lastName: string; username: string; password: string }) {
+> 11 |     await this.page.click('a[href="/parabank/register.htm"]');
+     |                     ^ Error: page.click: Target page, context or browser has been closed
+  12 |     await this.page.fill('input[name="customer.firstName"]', userData.firstName);
+  13 |     await this.page.fill('input[name="customer.lastName"]', userData.lastName);
+  14 |     await this.page.fill('input[name="customer.username"]', userData.username);
+  15 |     await this.page.fill('input[name="customer.password"]', userData.password);
+  16 |     await this.page.fill('input[name="repeatedPassword"]', userData.password);
+  17 |     await this.page.click('input[type="submit"]');
+  18 |     await expect(this.page.locator('.title')).toContainText('Welcome');
+  19 |   }
+  20 | }
+  21 |
+```

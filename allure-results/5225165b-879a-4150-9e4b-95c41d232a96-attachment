@@ -1,0 +1,39 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Bill Payment
+- Location: H:\projects\playwright-banking\tests\bill-payment.test.ts:6:5
+
+# Error details
+
+```
+Error: page.goto: net::ERR_ABORTED; maybe frame was detached?
+Call log:
+  - navigating to "https://parabank.parasoft.com/", waiting until "load"
+
+    at H:\projects\playwright-banking\tests\bill-payment.test.ts:9:14
+```
+
+# Test source
+
+```ts
+   1 | import { test } from '@playwright/test';
+   2 | import { LoginPage } from '../pages/LoginPage';
+   3 | import { BillPaymentPage } from '../pages/BillPaymentPage';
+   4 | import { testData } from '../data/testData';
+   5 |
+   6 | test('Bill Payment', async ({ page }) => {
+   7 |   const loginPage = new LoginPage(page);
+   8 |   const billPaymentPage = new BillPaymentPage(page);
+>  9 |   await page.goto('/');
+     |              ^ Error: page.goto: net::ERR_ABORTED; maybe frame was detached?
+  10 |   await loginPage.login(testData.login);
+  11 |   await billPaymentPage.payBill(testData.payment);
+  12 | });
+  13 |
+```

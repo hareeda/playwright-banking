@@ -1,0 +1,131 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Fund Transfer
+- Location: H:\projects\playwright-banking\tests\fund-transfer.test.ts:5:5
+
+# Error details
+
+```
+Error: expect.toContainText: Error: strict mode violation: locator('.title') resolved to 3 elements:
+    1) <h1 class="title">↵⇆⇆⇆Transfer Funds↵⇆⇆</h1> aka getByRole('heading', { name: 'Transfer Funds' })
+    2) <h1 class="title">Transfer Complete!</h1> aka getByText('Transfer Complete!')
+    3) <h1 class="title">↵⇆⇆⇆Error!↵⇆⇆</h1> aka getByText('Error!')
+
+Call log:
+  - expect.toContainText with timeout 5000ms
+  - waiting for locator('.title')
+
+    at FundTransferPage.transferFunds (H:\projects\playwright-banking\pages\FundTransferPage.ts:16:47)
+    at H:\projects\playwright-banking\tests\fund-transfer.test.ts:10:3
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- paragraph: Welcome John Doe
+- heading "Account Services" [level=2]
+- list:
+  - listitem:
+    - link "Open New Account"
+  - listitem:
+    - link "Accounts Overview"
+  - listitem:
+    - link "Transfer Funds"
+  - listitem:
+    - link "Bill Pay"
+  - listitem:
+    - link "Find Transactions"
+  - listitem:
+    - link "Update Contact Info"
+  - listitem:
+    - link "Request Loan"
+  - listitem:
+    - link "Log Out"
+- heading "Transfer Complete!" [level=1]
+- paragraph: "$100.00 has been transferred from account #22557 to account #22557."
+- paragraph: See Account Activity for more details.
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class FundTransferPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async transferFunds(amount: string, fromAccount: string, toAccount: string) {
+  11 |     await this.page.locator('//a[text()="Transfer Funds"]').click();
+  12 |     await this.page.fill('input[id="amount"]', amount);
+  13 |     await this.page.selectOption('select[id="fromAccountId"]', fromAccount);
+  14 |     await this.page.selectOption('select[id="toAccountId"]', toAccount);
+  15 |     await this.page.locator('//input[@value="Transfer"]').click();
+> 16 |     await expect(this.page.locator('.title')).toContainText('Transfer Complete');
+     |                                               ^ Error: expect.toContainText: Error: strict mode violation: locator('.title') resolved to 3 elements:
+  17 |   }
+  18 | }
+  19 |
+```

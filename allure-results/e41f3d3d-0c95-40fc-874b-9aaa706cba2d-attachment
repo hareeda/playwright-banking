@@ -1,0 +1,153 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Account Summary Verification
+- Location: H:\projects\playwright-banking\tests\account-summary.test.ts:5:5
+
+# Error details
+
+```
+TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator('//h1[contains(text(), "Welcome")]') to be visible
+
+    at LoginPage.login (H:\projects\playwright-banking\pages\LoginPage.ts:22:21)
+    at H:\projects\playwright-banking\tests\account-summary.test.ts:9:3
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- paragraph: Welcome John Doe
+- heading "Account Services" [level=2]
+- list:
+  - listitem:
+    - link "Open New Account"
+  - listitem:
+    - link "Accounts Overview"
+  - listitem:
+    - link "Transfer Funds"
+  - listitem:
+    - link "Bill Pay"
+  - listitem:
+    - link "Find Transactions"
+  - listitem:
+    - link "Update Contact Info"
+  - listitem:
+    - link "Request Loan"
+  - listitem:
+    - link "Log Out"
+- heading "Accounts Overview" [level=1]
+- table:
+  - rowgroup:
+    - row "Account Balance* Available Amount":
+      - cell "Account"
+      - cell "Balance*"
+      - cell "Available Amount"
+  - rowgroup:
+    - row "22557 $515.50 $515.50":
+      - cell "22557":
+        - link "22557"
+      - cell "$515.50"
+      - cell "$515.50"
+    - row "Total $515.50":
+      - cell "Total"
+      - cell "$515.50"
+      - cell
+  - rowgroup:
+    - row "*Balance includes deposits that may be subject to holds":
+      - cell "*Balance includes deposits that may be subject to holds"
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class LoginPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async login(username: string, password: string) {
+  11 |     console.log('🔹 Waiting for login form to load...');
+  12 |     await this.page.waitForSelector('input[name="username"]', { state: 'visible', timeout: 5000 });
+  13 |
+  14 |     console.log('🔹 Filling in username & password...');
+  15 |     await this.page.fill('input[name="username"]', username);
+  16 |     await this.page.fill('input[name="password"]', password);
+  17 |
+  18 |     console.log('🔹 Clicking the "Log In" button...');
+  19 |     await this.page.locator('//input[@value="Log In"]').click();
+  20 |
+  21 |     console.log('🔹 Verifying successful login...');
+> 22 |     await this.page.waitForSelector('//h1[contains(text(), "Welcome")]', { state: 'visible', timeout: 10000 });
+     |                     ^ TimeoutError: page.waitForSelector: Timeout 10000ms exceeded.
+  23 |
+  24 |     await expect(this.page.locator('//h1[contains(text(), "Welcome")]')).toContainText('Welcome');
+  25 |
+  26 |     console.log('✅ Login successful!');
+  27 |   }
+  28 | }
+  29 |
+```

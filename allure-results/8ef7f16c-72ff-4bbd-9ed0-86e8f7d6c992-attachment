@@ -1,0 +1,139 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Account Summary Verification
+- Location: H:\projects\playwright-banking\tests\account-summary.test.ts:5:5
+
+# Error details
+
+```
+Error: page.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('a[href="/parabank/overview.htm"]')
+
+    at AccountSummaryPage.verifyAccountSummary (H:\projects\playwright-banking\pages\AccountSummaryPage.ts:11:21)
+    at H:\projects\playwright-banking\tests\account-summary.test.ts:10:28
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- paragraph: Welcome John Doe
+- heading "Account Services" [level=2]
+- list:
+  - listitem:
+    - link "Open New Account"
+  - listitem:
+    - link "Accounts Overview"
+  - listitem:
+    - link "Transfer Funds"
+  - listitem:
+    - link "Bill Pay"
+  - listitem:
+    - link "Find Transactions"
+  - listitem:
+    - link "Update Contact Info"
+  - listitem:
+    - link "Request Loan"
+  - listitem:
+    - link "Log Out"
+- heading "Accounts Overview" [level=1]
+- table:
+  - rowgroup:
+    - row "Account Balance* Available Amount":
+      - cell "Account"
+      - cell "Balance*"
+      - cell "Available Amount"
+  - rowgroup:
+    - row "22557 $515.50 $515.50":
+      - cell "22557":
+        - link "22557"
+      - cell "$515.50"
+      - cell "$515.50"
+    - row "Total $515.50":
+      - cell "Total"
+      - cell "$515.50"
+      - cell
+  - rowgroup:
+    - row "*Balance includes deposits that may be subject to holds":
+      - cell "*Balance includes deposits that may be subject to holds"
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class AccountSummaryPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async verifyAccountSummary() {
+> 11 |     await this.page.click('a[href="/parabank/overview.htm"]');
+     |                     ^ Error: page.click: Test timeout of 30000ms exceeded.
+  12 |     await expect(this.page.locator('#accountTable')).toBeVisible();
+  13 |   }
+  14 | }
+  15 |
+```

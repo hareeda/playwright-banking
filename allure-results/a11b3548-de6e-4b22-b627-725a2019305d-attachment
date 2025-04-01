@@ -1,0 +1,44 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: User Login
+- Location: H:\projects\playwright-banking\tests\login.test.ts:4:5
+
+# Error details
+
+```
+Error: page.goto: net::ERR_NETWORK_CHANGED at https://parabank.parasoft.com/
+Call log:
+  - navigating to "https://parabank.parasoft.com/", waiting until "load"
+
+    at H:\projects\playwright-banking\tests\login.test.ts:6:14
+```
+
+# Page snapshot
+
+```yaml
+- heading "Your connection was interrupted" [level=1]
+- paragraph: A network change was detected.
+- text: ERR_NETWORK_CHANGED
+- button "Reload"
+```
+
+# Test source
+
+```ts
+  1 | import { test } from '@playwright/test';
+  2 | import { LoginPage } from '../pages/LoginPage';
+  3 |
+  4 | test('User Login', async ({ page }) => {
+  5 |   const loginPage = new LoginPage(page);
+> 6 |   await page.goto('/');
+    |              ^ Error: page.goto: net::ERR_NETWORK_CHANGED at https://parabank.parasoft.com/
+  7 |   await loginPage.login('john_doe', 'Test@123');
+  8 | });
+  9 |
+```

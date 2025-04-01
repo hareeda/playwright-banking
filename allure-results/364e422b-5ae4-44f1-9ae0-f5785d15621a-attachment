@@ -1,0 +1,119 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: User Login
+- Location: H:\projects\playwright-banking\tests\login.test.ts:4:5
+
+# Error details
+
+```
+Error: Timed out 5000ms waiting for expect(locator).toContainText(expected)
+
+Locator: locator('.welcome')
+Expected string: "Welcome"
+Received: <element(s) not found>
+Call log:
+  - expect.toContainText with timeout 5000ms
+  - waiting for locator('.welcome')
+
+    at LoginPage.login (H:\projects\playwright-banking\pages\LoginPage.ts:14:49)
+    at H:\projects\playwright-banking\tests\login.test.ts:7:3
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- heading "Customer Login" [level=2]
+- paragraph: Username
+- textbox
+- paragraph: Password
+- textbox
+- button "Log In"
+- paragraph:
+  - link "Forgot login info?"
+- paragraph:
+  - link "Register"
+- heading "Error!" [level=1]
+- paragraph: The username and password could not be verified.
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class LoginPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async login(username: string, password: string) {
+  11 |     await this.page.fill('input[name="username"]', username);
+  12 |     await this.page.fill('input[name="password"]', password);
+  13 |     await this.page.click('input[type="submit"]');
+> 14 |     await expect(this.page.locator('.welcome')).toContainText('Welcome');
+     |                                                 ^ Error: Timed out 5000ms waiting for expect(locator).toContainText(expected)
+  15 |   }
+  16 | }
+  17 |
+```

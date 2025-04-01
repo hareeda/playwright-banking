@@ -1,0 +1,137 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Bill Payment
+- Location: H:\projects\playwright-banking\tests\bill-payment.test.ts:6:5
+
+# Error details
+
+```
+Error: expect.toContainText: Error: strict mode violation: locator('.title') resolved to 3 elements:
+    1) <h1 class="title">Bill Payment Service</h1> aka getByRole('heading', { name: 'Bill Payment Service' })
+    2) <h1 class="title">Bill Payment Complete</h1> aka getByText('Bill Payment Complete')
+    3) <h1 class="title">Error!</h1> aka getByText('Error!')
+
+Call log:
+  - expect.toContainText with timeout 5000ms
+  - waiting for locator('.title')
+
+    at BillPaymentPage.payBill (H:\projects\playwright-banking\pages\BillPaymentPage.ts:23:66)
+    at H:\projects\playwright-banking\tests\bill-payment.test.ts:11:3
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- paragraph: Welcome Amy Sosa
+- heading "Account Services" [level=2]
+- list:
+  - listitem:
+    - link "Open New Account"
+  - listitem:
+    - link "Accounts Overview"
+  - listitem:
+    - link "Transfer Funds"
+  - listitem:
+    - link "Bill Pay"
+  - listitem:
+    - link "Find Transactions"
+  - listitem:
+    - link "Update Contact Info"
+  - listitem:
+    - link "Request Loan"
+  - listitem:
+    - link "Log Out"
+- heading "Error!" [level=1]
+- paragraph: An internal error has occurred and has been logged.
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 | import { paymentLocators } from '../locators/paymentLocators';
+   3 |
+   4 | export class BillPaymentPage {
+   5 |   private page: Page;
+   6 |
+   7 |   constructor(page: Page) {
+   8 |     this.page = page;
+   9 |   }
+  10 |
+  11 |   async payBill(userData: {amount: string, payeeName: string, payeeStreet: string, payeeCity: string, payeeState: string, payeeZip: string, payeePhone: string, payeeAccNum: string}) {
+  12 |     await this.page.locator(paymentLocators.billPay).click();
+  13 |     await this.page.fill(paymentLocators.payeeName, userData.payeeName);
+  14 |     await this.page.fill(paymentLocators.payeeStreet, userData.payeeStreet);
+  15 |     await this.page.fill(paymentLocators.payeeCity, userData.payeeCity);
+  16 |     await this.page.fill(paymentLocators.payeeState, userData.payeeState);
+  17 |     await this.page.fill(paymentLocators.payeeZipcode, userData.payeeZip);
+  18 |     await this.page.fill(paymentLocators.payeePhoneNum, userData.payeePhone);
+  19 |     await this.page.fill(paymentLocators.payeeAccountNum, userData.payeeAccNum);
+  20 |     await this.page.fill(paymentLocators.payeeVerifyAcc, userData.payeeAccNum);
+  21 |     await this.page.fill(paymentLocators.payeeAmount, userData.amount);
+  22 |     await this.page.click(paymentLocators.sendPayment);
+> 23 |     await expect(this.page.locator(paymentLocators.successText)).toContainText('Bill Payment Complete');
+     |                                                                  ^ Error: expect.toContainText: Error: strict mode violation: locator('.title') resolved to 3 elements:
+  24 |   }
+  25 | }
+  26 |
+```

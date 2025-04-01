@@ -1,0 +1,172 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Bill Payment
+- Location: H:\projects\playwright-banking\tests\request-loan.test.ts:5:5
+
+# Error details
+
+```
+Error: page.selectOption: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('select[id="fromAccountId"]')
+    - locator resolved to <select class="input" id="fromAccountId">…</select>
+  - attempting select option action
+    2 × waiting for element to be visible and enabled
+      - did not find some options
+    - retrying select option action
+    - waiting 20ms
+    2 × waiting for element to be visible and enabled
+      - did not find some options
+    - retrying select option action
+      - waiting 100ms
+    44 × waiting for element to be visible and enabled
+       - did not find some options
+     - retrying select option action
+       - waiting 500ms
+
+    at RequestLoanPage.loanReqDetails (H:\projects\playwright-banking\pages\RequestLoanPage.ts:17:21)
+    at H:\projects\playwright-banking\tests\request-loan.test.ts:10:3
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- paragraph: Welcome vinay alagam
+- heading "Account Services" [level=2]
+- list:
+  - listitem:
+    - link "Open New Account"
+  - listitem:
+    - link "Accounts Overview"
+  - listitem:
+    - link "Transfer Funds"
+  - listitem:
+    - link "Bill Pay"
+  - listitem:
+    - link "Find Transactions"
+  - listitem:
+    - link "Update Contact Info"
+  - listitem:
+    - link "Request Loan"
+  - listitem:
+    - link "Log Out"
+- heading "Apply for a Loan" [level=1]
+- table:
+  - rowgroup:
+    - 'row "Loan Amount: $ 10"':
+      - 'cell "Loan Amount: $"'
+      - cell "10":
+        - textbox: "10"
+      - cell
+    - 'row "Down Payment: $ 10"':
+      - 'cell "Down Payment: $"'
+      - cell "10":
+        - textbox: "10"
+      - cell
+    - 'row "From account #: 13788"':
+      - 'cell "From account #:"'
+      - cell "13788":
+        - combobox:
+          - option "13788" [selected]
+      - cell
+    - row "Apply Now":
+      - cell
+      - cell "Apply Now":
+        - button "Apply Now"
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class RequestLoanPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async loanReqDetails(loanAmount: string, downPayment: string, fromAccount: string) {
+  11 |     console.log('🔹 Navigating to Request Loan page...');
+  12 |     await this.page.locator('//a[text()="Request Loan"]').click();
+  13 |
+  14 |     console.log('🔹 Filling in loan details...');
+  15 |     await this.page.fill('input[id="amount"]', loanAmount);
+  16 |     await this.page.fill('input[id="downPayment"]', downPayment);
+> 17 |     await this.page.selectOption('select[id="fromAccountId"]', fromAccount);
+     |                     ^ Error: page.selectOption: Test timeout of 30000ms exceeded.
+  18 |
+  19 |     console.log('🔹 Clicking Apply Now button...');
+  20 |     await this.page.locator('//input[@value="Apply Now"]').click();
+  21 |
+  22 |     console.log('🔹 Waiting for loan approval message...');
+  23 |     await this.page.waitForSelector('#loanRequestApproved', { state: 'visible', timeout: 5000 });
+  24 |
+  25 |     console.log('🔹 Verifying loan approval...');
+  26 |     await expect(this.page.locator('#loanRequestApproved p:first-of-type')).toContainText('Congratulations, your loan has been approved.');
+  27 |
+  28 |     console.log('✅ Loan request successful!');
+  29 |   }
+  30 | }
+  31 |
+```

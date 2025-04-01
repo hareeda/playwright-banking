@@ -1,0 +1,49 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: User Registration
+- Location: H:\projects\playwright-banking\tests\registartion.test.ts:4:5
+
+# Error details
+
+```
+Error: page.goto: net::ERR_INTERNET_DISCONNECTED at https://parabank.parasoft.com/
+Call log:
+  - navigating to "https://parabank.parasoft.com/", waiting until "load"
+
+    at H:\projects\playwright-banking\tests\registartion.test.ts:6:14
+```
+
+# Page snapshot
+
+```yaml
+- heading "No internet" [level=1]
+- paragraph: "Try:"
+- list:
+  - listitem: Checking the network cables, modem, and router
+  - listitem: Reconnecting to Wi-Fi
+  - listitem:
+    - link "Running Windows Network Diagnostics"
+- text: ERR_INTERNET_DISCONNECTED
+- application "Dino game, press space to play"
+```
+
+# Test source
+
+```ts
+  1 | import { test } from '@playwright/test';
+  2 | import { RegistrationPage } from '../pages/RegistrationPage';
+  3 |
+  4 | test('User Registration', async ({ page }) => {
+  5 |   const registrationPage = new RegistrationPage(page);
+> 6 |   await page.goto('/');
+    |              ^ Error: page.goto: net::ERR_INTERNET_DISCONNECTED at https://parabank.parasoft.com/
+  7 |   await registrationPage.register({ firstName: 'John', lastName: 'Doe', username: 'john_doe', password: 'Test@123' });
+  8 | });
+  9 |
+```

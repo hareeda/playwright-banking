@@ -1,0 +1,147 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: User Registration
+- Location: H:\projects\playwright-banking\tests\registartion.test.ts:4:5
+
+# Error details
+
+```
+Error: page.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('a[href="/parabank/register.htm"]')
+
+    at RegistrationPage.register (H:\projects\playwright-banking\pages\RegistrationPage.ts:11:21)
+    at H:\projects\playwright-banking\tests\registartion.test.ts:7:26
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- heading "Customer Login" [level=2]
+- paragraph: Username
+- textbox
+- paragraph: Password
+- textbox
+- button "Log In"
+- paragraph:
+  - link "Forgot login info?"
+- paragraph:
+  - link "Register"
+- list:
+  - listitem: ATM Services
+  - listitem:
+    - link "Withdraw Funds"
+  - listitem:
+    - link "Transfer Funds"
+  - listitem:
+    - link "Check Balances"
+  - listitem:
+    - link "Make Deposits"
+- list:
+  - listitem: Online Services
+  - listitem:
+    - link "Bill Pay"
+  - listitem:
+    - link "Account History"
+  - listitem:
+    - link "Transfer Funds"
+- paragraph:
+  - link "Read More"
+- heading "Latest News" [level=4]
+- list:
+  - listitem: 03/29/2025
+  - listitem:
+    - link "ParaBank Is Now Re-Opened"
+  - listitem:
+    - link "New! Online Bill Pay"
+  - listitem:
+    - link "New! Online Account Transfers"
+- paragraph:
+  - link "Read More"
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class RegistrationPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async register(userData: { firstName: string; lastName: string; username: string; password: string }) {
+> 11 |     await this.page.click('a[href="/parabank/register.htm"]');
+     |                     ^ Error: page.click: Test timeout of 30000ms exceeded.
+  12 |     await this.page.fill('input[name="customer.firstName"]', userData.firstName);
+  13 |     await this.page.fill('input[name="customer.lastName"]', userData.lastName);
+  14 |     await this.page.fill('input[name="customer.username"]', userData.username);
+  15 |     await this.page.fill('input[name="customer.password"]', userData.password);
+  16 |     await this.page.fill('input[name="repeatedPassword"]', userData.password);
+  17 |     await this.page.click('input[type="submit"]');
+  18 |     await expect(this.page.locator('.title')).toContainText('Welcome');
+  19 |   }
+  20 | }
+  21 |
+```

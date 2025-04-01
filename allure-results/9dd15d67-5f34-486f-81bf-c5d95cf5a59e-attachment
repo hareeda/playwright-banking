@@ -1,0 +1,195 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: User Registration
+- Location: H:\projects\playwright-banking\tests\registration.test.ts:4:5
+
+# Error details
+
+```
+Error: locator.waitFor: Error: strict mode violation: locator('input[type="submit"]') resolved to 2 elements:
+    1) <input type="submit" class="button" value="Log In"/> aka getByRole('button', { name: 'Log In' })
+    2) <input type="submit" class="button" value="Register"/> aka getByRole('button', { name: 'Register' })
+
+Call log:
+  - waiting for locator('input[type="submit"]') to be visible
+
+    at RegistrationPage.register (H:\projects\playwright-banking\pages\RegistrationPage.ts:23:53)
+    at H:\projects\playwright-banking\tests\registration.test.ts:7:3
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- heading "Customer Login" [level=2]
+- paragraph: Username
+- textbox
+- paragraph: Password
+- textbox
+- button "Log In"
+- paragraph:
+  - link "Forgot login info?"
+- paragraph:
+  - link "Register"
+- heading "Signing up is easy!" [level=1]
+- paragraph: If you have an account with us you can sign-up for free instant online access. You will have to provide some personal information.
+- table:
+  - rowgroup:
+    - 'row "First Name: John"':
+      - cell "First Name:"
+      - cell "John":
+        - textbox: John
+      - cell
+    - 'row "Last Name: Doe"':
+      - cell "Last Name:"
+      - cell "Doe":
+        - textbox: Doe
+      - cell
+    - row "Address:":
+      - cell "Address:"
+      - cell:
+        - textbox
+      - cell
+    - row "City:":
+      - cell "City:"
+      - cell:
+        - textbox
+      - cell
+    - row "State:":
+      - cell "State:"
+      - cell:
+        - textbox
+      - cell
+    - row "Zip Code:":
+      - cell "Zip Code:"
+      - cell:
+        - textbox
+      - cell
+    - 'row "Phone #:"':
+      - 'cell "Phone #:"'
+      - cell:
+        - textbox
+      - cell
+    - row "SSN:":
+      - cell "SSN:"
+      - cell:
+        - textbox
+      - cell
+    - row:
+      - cell
+    - 'row "Username: john_doe"':
+      - cell "Username:"
+      - cell "john_doe":
+        - textbox: john_doe
+      - cell
+    - 'row "Password: Test@123"':
+      - cell "Password:"
+      - cell "Test@123":
+        - textbox: Test@123
+      - cell
+    - 'row "Confirm: Test@123"':
+      - cell "Confirm:"
+      - cell "Test@123":
+        - textbox: Test@123
+      - cell
+    - row "Register":
+      - cell
+      - cell "Register":
+        - button "Register"
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class RegistrationPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async register(userData: { firstName: string; lastName: string; username: string; password: string }) {
+  11 |     console.log('Navigating to registration page...');
+  12 |     await this.page.locator('//a[text()="Register"]').waitFor({ state: 'visible', timeout: 10000 });
+  13 |     await this.page.locator('//a[text()="Register"]').click();
+  14 |
+  15 |     console.log('Filling out registration form...');
+  16 |     await this.page.fill('input[name="customer.firstName"]', userData.firstName);
+  17 |     await this.page.fill('input[name="customer.lastName"]', userData.lastName);
+  18 |     await this.page.fill('input[name="customer.username"]', userData.username);
+  19 |     await this.page.fill('input[name="customer.password"]', userData.password);
+  20 |     await this.page.fill('input[name="repeatedPassword"]', userData.password);
+  21 |
+  22 |     console.log('Submitting the registration form...');
+> 23 |     await this.page.locator('input[type="submit"]').waitFor({ state: 'visible', timeout: 5000 });
+     |                                                     ^ Error: locator.waitFor: Error: strict mode violation: locator('input[type="submit"]') resolved to 2 elements:
+  24 |     await this.page.locator('input[type="submit"]').click();
+  25 |
+  26 |     console.log('Verifying successful registration...');
+  27 |     await expect(this.page.locator('.title')).toContainText('Welcome', { timeout: 10000 });
+  28 |
+  29 |     console.log('✅ Registration successful!');
+  30 |   }
+  31 | }
+  32 |
+```

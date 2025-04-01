@@ -1,0 +1,156 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Bill Payment
+- Location: H:\projects\playwright-banking\tests\request-loan.test.ts:5:5
+
+# Error details
+
+```
+Error: expect.toContainText: Error: strict mode violation: locator('#loanRequestApproved p') resolved to 2 elements:
+    1) <p>Congratulations, your loan has been approved.</p> aka getByText('Congratulations, your loan')
+    2) <p>…</p> aka getByText('Your new account number: 13899')
+
+Call log:
+  - expect.toContainText with timeout 5000ms
+  - waiting for locator('#loanRequestApproved p')
+
+    at RequestLoanPage.loanReqDetails (H:\projects\playwright-banking\pages\RequestLoanPage.ts:27:63)
+    at H:\projects\playwright-banking\tests\request-loan.test.ts:10:3
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- paragraph: Welcome Aniket S. Rathod
+- heading "Account Services" [level=2]
+- list:
+  - listitem:
+    - link "Open New Account"
+  - listitem:
+    - link "Accounts Overview"
+  - listitem:
+    - link "Transfer Funds"
+  - listitem:
+    - link "Bill Pay"
+  - listitem:
+    - link "Find Transactions"
+  - listitem:
+    - link "Update Contact Info"
+  - listitem:
+    - link "Request Loan"
+  - listitem:
+    - link "Log Out"
+- heading "Loan Request Processed" [level=1]
+- table:
+  - rowgroup:
+    - 'row "Loan Provider: Wealth Securities Dynamic Loans (WSDL)"':
+      - cell "Loan Provider:"
+      - cell "Wealth Securities Dynamic Loans (WSDL)"
+    - 'row "Date: 03-30-2025"':
+      - cell "Date:"
+      - cell "03-30-2025"
+    - 'row "Status: Approved"':
+      - cell "Status:"
+      - cell "Approved"
+- paragraph: Congratulations, your loan has been approved.
+- paragraph:
+  - text: "Your new account number:"
+  - link "13899"
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class RequestLoanPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async loanReqDetails(loanAmount: string, downPayment: string, fromAccount: string) {
+  11 |     console.log('🔹 Navigating to Request Loan page...');
+  12 |     await this.page.locator('//a[text()="Request Loan"]').click();
+  13 |
+  14 |     console.log('🔹 Filling in loan details...');
+  15 |     await this.page.fill('input[id="amount"]', loanAmount);
+  16 |     await this.page.fill('input[id="downPayment"]', downPayment);
+  17 |     await this.page.selectOption('select[id="fromAccountId"]', fromAccount);
+  18 |
+  19 |     console.log('🔹 Clicking Apply Now button...');
+  20 |     await this.page.locator('//input[@value="Apply Now"]').click();
+  21 |
+  22 |     console.log('🔹 Waiting for loan approval message...');
+  23 |     await this.page.waitForSelector('#loanRequestApproved', { state: 'visible', timeout: 5000 });
+  24 |
+  25 |     console.log('🔹 Verifying loan approval...');
+  26 |     await expect(this.page.locator('#loanRequestApproved')).toBeVisible();
+> 27 |     await expect(this.page.locator('#loanRequestApproved p')).toContainText('Congratulations, your loan has been approved.');
+     |                                                               ^ Error: expect.toContainText: Error: strict mode violation: locator('#loanRequestApproved p') resolved to 2 elements:
+  28 |
+  29 |     console.log('✅ Loan request successful!');
+  30 |   }
+  31 | }
+  32 |
+```

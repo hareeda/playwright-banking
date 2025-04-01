@@ -1,0 +1,57 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Account Summary Verification
+- Location: H:\projects\playwright-banking\tests\account-summary.test.ts:6:5
+
+# Error details
+
+```
+Error: page.waitForSelector: Target page, context or browser has been closed
+Call log:
+  - waiting for locator('input[name=\'username\']') to be visible
+
+    at LoginPage.login (H:\projects\playwright-banking\pages\LoginPage.ts:13:21)
+    at H:\projects\playwright-banking\tests\account-summary.test.ts:10:19
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 | import { loginLocators } from '../locators/loginLocators';
+   3 |
+   4 | export class LoginPage {
+   5 |   private page: Page;
+   6 |
+   7 |   constructor(page: Page) {
+   8 |     this.page = page;
+   9 |   }
+  10 |
+  11 |   async login(userdata: {username: string, password: string}) {
+  12 |     console.log('🔹 Waiting for login form to load...');
+> 13 |     await this.page.waitForSelector(loginLocators.username, { state: 'visible', timeout: 5000 });
+     |                     ^ Error: page.waitForSelector: Target page, context or browser has been closed
+  14 |
+  15 |     console.log('🔹 Filling in username & password...');
+  16 |     await this.page.fill(loginLocators.username, userdata.username);
+  17 |     await this.page.fill(loginLocators.password, userdata.password);
+  18 |
+  19 |     console.log('🔹 Clicking the "Log In" button...');
+  20 |     await this.page.locator(loginLocators.loginButton).click();
+  21 |
+  22 |     console.log('🔹 Verifying successful login...');
+  23 |     await this.page.waitForSelector('p.smallText >> text=Welcome', { state: 'visible', timeout: 10000 });
+  24 |
+  25 |     await expect(this.page.locator(loginLocators.welcomeText)).toContainText('Welcome');
+  26 |
+  27 |     console.log('✅ Login successful!');
+  28 |   }
+  29 | }
+  30 |
+```

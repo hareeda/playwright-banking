@@ -1,0 +1,134 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Fund Transfer
+- Location: H:\projects\playwright-banking\tests\fund-transfer.test.ts:5:5
+
+# Error details
+
+```
+Error: page.selectOption: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for locator('select[name="fromAccountId"]')
+
+    at FundTransferPage.transferFunds (H:\projects\playwright-banking\pages\FundTransferPage.ts:13:21)
+    at H:\projects\playwright-banking\tests\fund-transfer.test.ts:10:3
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- paragraph: Welcome John Doe
+- heading "Account Services" [level=2]
+- list:
+  - listitem:
+    - link "Open New Account"
+  - listitem:
+    - link "Accounts Overview"
+  - listitem:
+    - link "Transfer Funds"
+  - listitem:
+    - link "Bill Pay"
+  - listitem:
+    - link "Find Transactions"
+  - listitem:
+    - link "Update Contact Info"
+  - listitem:
+    - link "Request Loan"
+  - listitem:
+    - link "Log Out"
+- heading "Transfer Funds" [level=1]
+- paragraph:
+  - text: "Amount: $"
+  - textbox: "100"
+- text: "From account #"
+- combobox:
+  - option "22557" [selected]
+- text: "to account #"
+- combobox:
+  - option "22557" [selected]
+- button "Transfer"
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class FundTransferPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async transferFunds(amount: string, fromAccount: string, toAccount: string) {
+  11 |     await this.page.locator('//a[text()="Transfer Funds"]').click();
+  12 |     await this.page.fill('input[id="amount"]', amount);
+> 13 |     await this.page.selectOption('select[name="fromAccountId"]', fromAccount);
+     |                     ^ Error: page.selectOption: Test timeout of 30000ms exceeded.
+  14 |     await this.page.selectOption('select[name="toAccountId"]', toAccount);
+  15 |     await this.page.locator('//input[@value="Transfer"]').click();
+  16 |     await expect(this.page.locator('.title')).toContainText('Transfer Complete');
+  17 |   }
+  18 | }
+  19 |
+```

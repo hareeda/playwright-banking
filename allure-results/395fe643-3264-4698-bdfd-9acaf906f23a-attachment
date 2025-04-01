@@ -1,0 +1,71 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Fund Transfer
+- Location: H:\projects\playwright-banking\tests\fund-transfer.test.ts:5:5
+
+# Error details
+
+```
+Error: page.selectOption: Target page, context or browser has been closed
+Call log:
+  - waiting for locator('select[id="fromAccountId"]')
+    - locator resolved to <select class="input" id="fromAccountId"></select>
+  - attempting select option action
+    2 × waiting for element to be visible and enabled
+      - did not find some options
+    - retrying select option action
+    - waiting 20ms
+    2 × waiting for element to be visible and enabled
+      - did not find some options
+    - retrying select option action
+      - waiting 100ms
+    13 × waiting for element to be visible and enabled
+       - did not find some options
+     - retrying select option action
+       - waiting 500ms
+
+    at FundTransferPage.transferFunds (H:\projects\playwright-banking\pages\FundTransferPage.ts:16:21)
+    at H:\projects\playwright-banking\tests\fund-transfer.test.ts:10:3
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class FundTransferPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async transferFunds(amount: string, fromAccount: string, toAccount: string) {
+  11 |     console.log('🔹 Navigating to Transfer Funds page...');
+  12 |     await this.page.locator('//a[text()="Transfer Funds"]').click();
+  13 |
+  14 |     console.log('🔹 Filling in transfer details...');
+  15 |     await this.page.fill('input[id="amount"]', amount);
+> 16 |     await this.page.selectOption('select[id="fromAccountId"]', fromAccount);
+     |                     ^ Error: page.selectOption: Target page, context or browser has been closed
+  17 |     await this.page.selectOption('select[id="toAccountId"]', toAccount);
+  18 |
+  19 |     console.log('🔹 Clicking Transfer button...');
+  20 |     await this.page.locator('//input[@value="Transfer"]').click();
+  21 |
+  22 |     console.log('🔹 Verifying successful transfer...');
+  23 |     await this.page.waitForSelector('//h1[text()="Transfer Complete!"]', { state: 'visible', timeout: 5000 });
+  24 |
+  25 |     await expect(this.page.locator('//h1[text()="Transfer Complete!"]')).toBeVisible();
+  26 |
+  27 |     console.log('✅ Fund transfer successful!');
+  28 |   }
+  29 | }
+  30 |
+```

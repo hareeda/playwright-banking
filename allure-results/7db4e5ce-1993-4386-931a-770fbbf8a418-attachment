@@ -1,0 +1,204 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: User Registration
+- Location: H:\projects\playwright-banking\tests\registration.test.ts:4:5
+
+# Error details
+
+```
+Error: Timed out 10000ms waiting for expect(locator).toContainText(expected)
+
+Locator: locator('.title')
+Expected string: "Welcome"
+Received string: "Signing up is easy!"
+Call log:
+  - expect.toContainText with timeout 10000ms
+  - waiting for locator('.title')
+    13 × locator resolved to <h1 class="title">Signing up is easy!</h1>
+       - unexpected value "Signing up is easy!"
+
+    at RegistrationPage.register (H:\projects\playwright-banking\pages\RegistrationPage.ts:32:47)
+    at H:\projects\playwright-banking\tests\registration.test.ts:7:3
+```
+
+# Page snapshot
+
+```yaml
+- link:
+  - img
+- link "ParaBank":
+  - img "ParaBank"
+- paragraph: Experience the difference
+- list:
+  - listitem: Solutions
+  - listitem:
+    - link "About Us"
+  - listitem:
+    - link "Services"
+  - listitem:
+    - link "Products"
+  - listitem:
+    - link "Locations"
+  - listitem:
+    - link "Admin Page"
+- list:
+  - listitem:
+    - link "home"
+  - listitem:
+    - link "about"
+  - listitem:
+    - link "contact"
+- heading "Customer Login" [level=2]
+- paragraph: Username
+- textbox
+- paragraph: Password
+- textbox
+- button "Log In"
+- paragraph:
+  - link "Forgot login info?"
+- paragraph:
+  - link "Register"
+- heading "Signing up is easy!" [level=1]
+- paragraph: If you have an account with us you can sign-up for free instant online access. You will have to provide some personal information.
+- table:
+  - rowgroup:
+    - 'row "First Name: Amy"':
+      - cell "First Name:"
+      - cell "Amy":
+        - textbox: Amy
+      - cell
+    - 'row "Last Name: Jonah"':
+      - cell "Last Name:"
+      - cell "Jonah":
+        - textbox: Jonah
+      - cell
+    - 'row "Address: 2nd street"':
+      - cell "Address:"
+      - cell "2nd street":
+        - textbox: 2nd street
+      - cell
+    - 'row "City: Washington"':
+      - cell "City:"
+      - cell "Washington":
+        - textbox: Washington
+      - cell
+    - 'row "State: Bel-Ridge"':
+      - cell "State:"
+      - cell "Bel-Ridge":
+        - textbox: Bel-Ridge
+      - cell
+    - 'row "Zip Code: 57684"':
+      - cell "Zip Code:"
+      - cell "57684":
+        - textbox: "57684"
+      - cell
+    - 'row "Phone #:"':
+      - 'cell "Phone #:"'
+      - cell:
+        - textbox
+      - cell
+    - 'row "SSN: 123456789"':
+      - cell "SSN:"
+      - cell "123456789":
+        - textbox: "123456789"
+      - cell
+    - row:
+      - cell
+    - 'row "Username: amy_jonah This username already exists."':
+      - cell "Username:"
+      - cell "amy_jonah":
+        - textbox: amy_jonah
+      - cell "This username already exists."
+    - row "Password:":
+      - cell "Password:"
+      - cell:
+        - textbox
+      - cell
+    - row "Confirm:":
+      - cell "Confirm:"
+      - cell:
+        - textbox
+      - cell
+    - row "Register":
+      - cell
+      - cell "Register":
+        - button "Register"
+- list:
+  - listitem:
+    - link "Home"
+    - text: "|"
+  - listitem:
+    - link "About Us"
+    - text: "|"
+  - listitem:
+    - link "Services"
+    - text: "|"
+  - listitem:
+    - link "Products"
+    - text: "|"
+  - listitem:
+    - link "Locations"
+    - text: "|"
+  - listitem:
+    - link "Forum"
+    - text: "|"
+  - listitem:
+    - link "Site Map"
+    - text: "|"
+  - listitem:
+    - link "Contact Us"
+- paragraph: © Parasoft. All rights reserved.
+- list:
+  - listitem: "Visit us at:"
+  - listitem:
+    - link "www.parasoft.com"
+```
+
+# Test source
+
+```ts
+   1 | import { Page, expect } from '@playwright/test';
+   2 |
+   3 | export class RegistrationPage {
+   4 |   private page: Page;
+   5 |
+   6 |   constructor(page: Page) {
+   7 |     this.page = page;
+   8 |   }
+   9 |
+  10 |   async register(userData: { firstName: string; lastName: string; username: string; password: string; street: string; city: string; state: string; zipcode: string; ssn: string }) {
+  11 |     console.log('Navigating to registration page...');
+  12 |     await this.page.locator('//a[text()="Register"]').waitFor({ state: 'visible', timeout: 10000 });
+  13 |     await this.page.locator('//a[text()="Register"]').click();
+  14 |
+  15 |     console.log('Filling out registration form...');
+  16 |     await this.page.fill('//input[@name="customer.firstName"]', userData.firstName);
+  17 |     await this.page.fill('//input[@name="customer.lastName"]', userData.lastName);
+  18 |     await this.page.fill('//input[@name="customer.address.street"]', userData.street);
+  19 |     await this.page.fill('//input[@name="customer.address.city"]', userData.city);
+  20 |     await this.page.fill('//input[@name="customer.address.state"]', userData.state);
+  21 |     await this.page.fill('//input[@name="customer.address.zipCode"]', userData.zipcode);
+  22 |     await this.page.fill('//input[@name="customer.ssn"]', userData.ssn);
+  23 |     await this.page.fill('//input[@name="customer.username"]', userData.username);
+  24 |     await this.page.fill('//input[@name="customer.password"]', userData.password);
+  25 |     await this.page.fill('//input[@name="repeatedPassword"]', userData.password);
+  26 |
+  27 |     console.log('Submitting the registration form...');
+  28 |     await this.page.locator('//input[@value="Register"]').waitFor({ state: 'visible', timeout: 5000 });
+  29 |     await this.page.locator('//input[@value="Register"]').click();
+  30 |
+  31 |     console.log('Verifying successful registration...');
+> 32 |     await expect(this.page.locator('.title')).toContainText('Welcome', { timeout: 10000 });
+     |                                               ^ Error: Timed out 10000ms waiting for expect(locator).toContainText(expected)
+  33 |
+  34 |     console.log('✅ Registration successful!');
+  35 |   }
+  36 | }
+  37 |
+```

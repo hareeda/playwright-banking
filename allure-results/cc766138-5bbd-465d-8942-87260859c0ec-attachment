@@ -1,0 +1,54 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: Bill Payment
+- Location: H:\projects\playwright-banking\tests\bill-payment.spec.ts:5:5
+
+# Error details
+
+```
+Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://parabank.parasoft.com/
+Call log:
+  - navigating to "https://parabank.parasoft.com/", waiting until "load"
+
+    at H:\projects\playwright-banking\tests\bill-payment.spec.ts:8:14
+```
+
+# Page snapshot
+
+```yaml
+- heading "This site can’t be reached" [level=1]
+- paragraph:
+  - strong: parabank.parasoft.com
+  - text: ’s DNS address could not be found. Diagnosing the problem.
+- paragraph
+- list:
+  - listitem:
+    - link "Try running Windows Network Diagnostics"
+    - text: .
+- text: DNS_PROBE_STARTED
+- button "Reload"
+```
+
+# Test source
+
+```ts
+   1 | import { test } from '@playwright/test';
+   2 | import { LoginPage } from '../pages/LoginPage';
+   3 | import { BillPaymentPage } from '../pages/BillPaymentPage';
+   4 |
+   5 | test('Bill Payment', async ({ page }) => {
+   6 |   const loginPage = new LoginPage(page);
+   7 |   const billPaymentPage = new BillPaymentPage(page);
+>  8 |   await page.goto('/');
+     |              ^ Error: page.goto: net::ERR_NAME_NOT_RESOLVED at https://parabank.parasoft.com/
+   9 |   await loginPage.login('john_doe', 'Test@123');
+  10 |   await billPaymentPage.payBill('50', 'Utility Company');
+  11 | });
+  12 |
+```
